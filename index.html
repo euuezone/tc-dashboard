@@ -419,8 +419,8 @@ tbody tr:hover td { background: var(--color-surface-hover); }
       <div id="assign-day-tabs" style="padding:0 var(--space-5);border-bottom:1px solid var(--color-border)"></div>
       <!-- 테이블 -->
       <div style="overflow-x:auto">
-        <table style="min-width:700px">
-          <thead><tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left">크로스체크</th><th class="td-left" style="min-width:200px">진행 현황</th></tr></thead>
+        <table style="min-width:900px">
+          <thead><tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left">크로스체크</th><th class="td-left" style="min-width:200px">검토진행현황</th><th style="min-width:120px">검토확인</th><th style="min-width:110px">수정 상태</th></tr></thead>
           <tbody id="cx-assign-body"></tbody>
         </table>
       </div>
@@ -582,10 +582,30 @@ const defaultRows = {
 // 날짜별 배분 현황 저장소: { "2026-05-27": { "주식": [{...}], ... } }
 let assignByDate = JSON.parse(localStorage.getItem('cx_assign') || 'null');
 if (!assignByDate) {
-  assignByDate = { '2026-05-27': JSON.parse(JSON.stringify(defaultRows)) };
+  assignByDate = {
+    '2026-05-27': JSON.parse(JSON.stringify(defaultRows)),
+    '2026-05-28': JSON.parse(JSON.stringify(defaultRows)),
+  };
   localStorage.setItem('cx_assign', JSON.stringify(assignByDate));
 }
-let activeAssignDate = Object.keys(assignByDate).sort().reverse()[0];
+// 기존 데이터에 05/28 없으면 추가
+if (!assignByDate['2026-05-28']) {
+  const prev = assignByDate[Object.keys(assignByDate).sort().reverse()[0]];
+  assignByDate['2026-05-28'] = JSON.parse(JSON.stringify(prev));
+  localStorage.setItem('cx_assign', JSON.stringify(assignByDate));
+}
+let activeAssignDate = '2026-05-28';
+
+// 검토확인 저장소: { "2026-05-28": { "주식": true, ... } }
+let confirmByDate = JSON.parse(localStorage.getItem('cx_confirm') || '{}');
+function saveConfirm() { localStorage.setItem('cx_confirm', JSON.stringify(confirmByDate)); }
+
+function toggleConfirm(date, menu) {
+  if (!confirmByDate[date]) confirmByDate[date] = {};
+  confirmByDate[date][menu] = !confirmByDate[date][menu];
+  saveConfirm();
+  renderCrosscheckTable();
+}
 
 const checkerSummary = [
   {name:'박혜상',menus:'투자정보, 뱅킹/공모주/대출',screens:84,pct:37,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
@@ -652,10 +672,13 @@ function renderAssignTabs() {
 
 function renderCrosscheckTable() {
   const rows = assignByDate[activeAssignDate] || {};
+  const confirms = confirmByDate[activeAssignDate] || {};
   document.getElementById('cx-assign-body').innerHTML = menuBase.map((m, mi) => {
     const rowData = rows[m.menu] || [];
-    return `<tr>
-      <td class="td-left">${m.menu}</td>
+    const confirmed = !!confirms[m.menu];
+    const menuKey = m.menu.replace(/'/g, "\\'");
+    return `<tr${confirmed ? ' style="background:#f0fdf4"' : ''}>
+      <td class="td-left" style="font-weight:600">${m.menu}</td>
       <td>${m.screens}</td>
       <td class="td-left">${m.authors.map(a=>`<span class="chip chip-plain">${a}</span>`).join('')}</td>
       <td class="td-left">${m.checkers.map(c=>`<span class="chip chip-checker">${c}</span>`).join('')}</td>
@@ -663,10 +686,10 @@ function renderCrosscheckTable() {
         <div class="pd-wrap">
           ${rowData.map((r,ri) => editMode ? `
             <div class="pd-row" style="gap:5px;flex-wrap:wrap">
-              <input class="edit-input" style="width:65px" value="${r.name}" onchange="assignByDate['${activeAssignDate}']['${m.menu}'][${ri}].name=this.value">
-              <input class="edit-input" style="width:44px" type="number" min="0" max="100" value="${r.pct}" onchange="assignByDate['${activeAssignDate}']['${m.menu}'][${ri}].pct=+this.value;renderCrosscheckTable()">%
-              <input class="edit-input" style="width:110px" value="${r.tag}" onchange="assignByDate['${activeAssignDate}']['${m.menu}'][${ri}].tag=this.value">
-              <button class="btn-sm danger" style="font-size:10px;padding:1px 5px" onclick="assignByDate['${activeAssignDate}']['${m.menu}'].splice(${ri},1);renderCrosscheckTable()">×</button>
+              <input class="edit-input" style="width:65px" value="${r.name}" onchange="assignByDate['${activeAssignDate}']['${menuKey}'][${ri}].name=this.value">
+              <input class="edit-input" style="width:44px" type="number" min="0" max="100" value="${r.pct}" onchange="assignByDate['${activeAssignDate}']['${menuKey}'][${ri}].pct=+this.value;renderCrosscheckTable()">%
+              <input class="edit-input" style="width:110px" value="${r.tag}" onchange="assignByDate['${activeAssignDate}']['${menuKey}'][${ri}].tag=this.value">
+              <button class="btn-sm danger" style="font-size:10px;padding:1px 5px" onclick="assignByDate['${activeAssignDate}']['${menuKey}'].splice(${ri},1);renderCrosscheckTable()">×</button>
             </div>
           ` : `
             <div class="pd-row">
@@ -675,8 +698,23 @@ function renderCrosscheckTable() {
               <span class="pd-tag ${r.tagCls}">${r.tag}</span>
             </div>
           `).join('')}
-          ${editMode ? `<button class="btn-sm" style="font-size:10px;margin-top:3px" onclick="if(!assignByDate['${activeAssignDate}']['${m.menu}'])assignByDate['${activeAssignDate}']['${m.menu}']=[];assignByDate['${activeAssignDate}']['${m.menu}'].push({name:'',pct:0,tag:'',tagCls:'tag-gray'});renderCrosscheckTable()">+ 행 추가</button>` : ''}
+          ${editMode ? `<button class="btn-sm" style="font-size:10px;margin-top:3px" onclick="if(!assignByDate['${activeAssignDate}']['${menuKey}'])assignByDate['${activeAssignDate}']['${menuKey}']=[];assignByDate['${activeAssignDate}']['${menuKey}'].push({name:'',pct:0,tag:'',tagCls:'tag-gray'});renderCrosscheckTable()">+ 행 추가</button>` : ''}
         </div>
+      </td>
+      <td style="text-align:center">
+        <button onclick="toggleConfirm('${activeAssignDate}','${menuKey}')"
+          style="padding:4px 10px;font-size:11px;font-weight:700;border:1px solid;cursor:pointer;font-family:inherit;
+            ${confirmed
+              ? 'background:#dcfce7;color:#15803d;border-color:#86efac;'
+              : 'background:#f3f4f6;color:#6b7280;border-color:#e5e7eb;'}">
+          ${confirmed ? '✓ 확인완료' : '확인'}
+        </button>
+      </td>
+      <td style="text-align:center">
+        ${confirmed
+          ? '<span style="display:inline-block;padding:3px 8px;font-size:11px;font-weight:700;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd">수정진행가능</span>'
+          : '<span style="display:inline-block;padding:3px 8px;font-size:11px;color:#909090;background:#f3f4f6;border:1px solid #e5e7eb">대기중</span>'
+        }
       </td>
     </tr>`;
   }).join('');
