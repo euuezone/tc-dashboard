@@ -228,6 +228,41 @@ tbody tr:hover td { background: var(--color-surface-hover); }
 .tag-time  { background:#dbeafe; color:#1d4ed8; }
 .tag-warn  { background:#fee2e2; color:#b91c1c; }
 .tag-gray  { background:#f3f4f6; color:#6b7280; }
+
+/* ── Edit mode ── */
+.edit-bar { display:flex; justify-content:flex-end; padding-bottom:var(--space-3); }
+.btn-mode { padding:4px 14px; font-size:11px; font-weight:600; border:1px solid var(--color-border); background:var(--color-surface-card); cursor:pointer; color:var(--color-text-tertiary); font-family:var(--font-family); transition:all 0.15s; }
+.btn-mode.on { background:#111; color:#fff; border-color:#111; }
+.btn-sm { padding:2px 8px; font-size:11px; font-weight:600; border:1px solid var(--color-border); background:var(--color-surface-card); cursor:pointer; color:var(--color-text-primary); font-family:var(--font-family); }
+.btn-sm.danger { border-color:#fca5a5; color:#dc2626; background:#fff5f5; }
+.card-header-actions { margin-left:auto; }
+.edit-input { border:1px solid var(--color-border); padding:2px 5px; font-size:11px; font-family:var(--font-family); }
+.edit-select { border:1px solid var(--color-border); padding:2px 4px; font-size:11px; font-family:var(--font-family); }
+
+/* ── Add form ── */
+.add-form { background:#f8fafc; border:1px solid var(--color-border); padding:var(--space-4) var(--space-5); margin:0; display:none; border-top:none; }
+.add-form.show { display:block; }
+.form-row { display:flex; gap:var(--space-3); flex-wrap:wrap; align-items:flex-end; margin-bottom:var(--space-2); }
+.form-group { display:flex; flex-direction:column; gap:3px; }
+.form-label { font-size:11px; font-weight:600; color:var(--color-text-tertiary); }
+.form-input { border:1px solid var(--color-border); padding:var(--space-1) var(--space-2); font-size:var(--font-size-sm); font-family:var(--font-family); }
+.form-select { border:1px solid var(--color-border); padding:5px var(--space-2); font-size:var(--font-size-sm); font-family:var(--font-family); }
+.form-actions { display:flex; gap:var(--space-2); margin-top:var(--space-2); }
+.btn-submit { padding:6px 16px; font-size:var(--font-size-sm); font-weight:600; border:none; background:#111; color:#fff; cursor:pointer; font-family:var(--font-family); }
+.btn-cancel-form { padding:6px 14px; font-size:var(--font-size-sm); font-weight:600; border:1px solid var(--color-border); background:#fff; cursor:pointer; font-family:var(--font-family); }
+
+/* ── Day tabs ── */
+.day-tabs { display:flex; gap:0; border-bottom:1px solid var(--color-border); margin-bottom:var(--space-3); flex-wrap:wrap; }
+.day-tab { padding:6px 14px; font-size:11px; font-weight:600; border:none; background:none; cursor:pointer; color:var(--color-text-tertiary); border-bottom:2px solid transparent; margin-bottom:-1px; font-family:var(--font-family); white-space:nowrap; }
+.day-tab.active { color:var(--color-text-primary); border-bottom-color:var(--color-text-primary); }
+.day-tab:hover:not(.active) { color:var(--color-text-primary); }
+.day-panel { display:none; }
+.day-panel.active { display:block; }
+
+/* ── Review file badges ── */
+.badge-ok     { background:#dcfce7; color:#15803d; }
+.badge-issue  { background:#fee2e2; color:#b91c1c; }
+.badge-recheck{ background:#fef9c3; color:#a16207; }
 </style>
 </head>
 <body>
@@ -247,7 +282,7 @@ tbody tr:hover td { background: var(--color-surface-hover); }
       <div class="header-sub">신한1팀 · 5월 3주차 진행 상황 대시보드</div>
     </div>
     <div class="header-date">
-      <strong>2026. 05. 27</strong>기준일 (수)
+      <strong>2026. 05. 28</strong>기준일 (목)
     </div>
   </div>
 
@@ -366,68 +401,387 @@ tbody tr:hover td { background: var(--color-surface-hover); }
 
       <!-- ══ TAB 3: 크로스체크 ══ -->
   <div id="tab-crosscheck" class="tab-pane">
-      <div class="card" style="margin-bottom:var(--space-5)">
-        <div class="card-header"><span class="dot" style="background:#a855f7"></span>크로스체크 담당자 배분 · 진행 현황</div>
-        <div style="overflow-x:auto">
+
+    <!-- 편집 모드 토글 -->
+    <div class="edit-bar">
+      <button class="btn-mode" id="editModeBtn" onclick="toggleEditMode()">✏️ 편집 모드</button>
+    </div>
+
+    <!-- 카드 1: 배분 현황 -->
+    <div class="card" style="margin-bottom:var(--space-5)">
+      <div class="card-header">
+        <span class="dot" style="background:#a855f7"></span>크로스체크 담당자 배분 · 진행 현황
+      </div>
+      <div style="overflow-x:auto">
         <table style="min-width:700px">
-          <thead><tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left">크로스체크</th><th class="td-left" style="min-width:180px">진행 현황</th></tr></thead>
-          <tbody>
-            <tr><td class="td-left">주식</td><td>226</td><td class="td-left"><span class="chip chip-plain">박선복</span><span class="chip chip-plain">장소윤</span><span class="chip chip-plain">이서후</span></td><td class="td-left"><span class="chip chip-checker">유진홍</span><span class="chip chip-checker">허세빈</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">유진홍</span><div class="pd-bar"><div class="pd-bar-fill" style="width:50%;background:#3b82f6"></div></div><span class="pd-tag tag-today">50% 진행중</span></div>
-<div class="pd-row"><span class="pd-menu" style="min-width:42px">허세빈</span><div class="pd-bar"><div class="pd-bar-fill" style="width:0%;background:#ef4444"></div></div><span class="pd-tag tag-warn">미진행</span></div></div></td></tr>
-            <tr><td class="td-left">해외주식</td><td>116</td><td class="td-left"><span class="chip chip-plain">박혜상</span></td><td class="td-left"><span class="chip chip-checker">오문숙</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">오문숙</span><div class="pd-bar"><div class="pd-bar-fill" style="width:70%;background:#3b82f6"></div></div><span class="pd-tag tag-time">70% · 오후3시</span></div></div></td></tr>
-            <tr><td class="td-left">선물옵션</td><td>104</td><td class="td-left"><span class="chip chip-plain">박선복</span><span class="chip chip-plain">황준혁</span></td><td class="td-left"><span class="chip chip-checker">이서후</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">이서후</span><span class="pd-tag tag-time">오늘 마무리</span></div></div></td></tr>
-            <tr><td class="td-left">금융상품</td><td>102</td><td class="td-left"><span class="chip chip-plain">오문숙</span></td><td class="td-left"><span class="chip chip-checker">황준혁</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">황준혁</span><span class="pd-tag tag-time">오후 4시 마무리</span></div></div></td></tr>
-            <tr><td class="td-left">주문체결</td><td>75</td><td class="td-left"><span class="chip chip-plain">오문숙</span><span class="chip chip-plain">김관영</span><span class="chip chip-plain">허세빈</span></td><td class="td-left"><span class="chip chip-checker">오현주</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">오현주</span><span class="pd-tag tag-gray">—</span></div></div></td></tr>
-            <tr><td class="td-left">잔고평가</td><td>74</td><td class="td-left"><span class="chip chip-plain">유진홍</span></td><td class="td-left"><span class="chip chip-checker">박선복</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">박선복</span><div class="pd-bar"><div class="pd-bar-fill" style="width:20%;background:#3b82f6"></div></div><span class="pd-tag tag-warn">20% · 완료 미정</span></div></div></td></tr>
-            <tr><td class="td-left">온라인지점</td><td>71</td><td class="td-left"><span class="chip chip-plain">김관영</span></td><td class="td-left"><span class="chip chip-checker">김은경</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">김은경</span><div class="pd-bar"><div class="pd-bar-fill" style="width:100%;background:#22c55e"></div></div><span class="pd-tag tag-done">완료 ✓</span></div></div></td></tr>
-            <tr><td class="td-left">투자정보</td><td>67</td><td class="td-left"><span class="chip chip-plain">허세빈</span><span class="chip chip-plain">김은경</span></td><td class="td-left"><span class="chip chip-checker">박혜상</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">박혜상</span><div class="pd-bar"><div class="pd-bar-fill" style="width:50%;background:#3b82f6"></div></div><span class="pd-tag tag-today">50% · 오늘완료예정</span></div></div></td></tr>
-            <tr><td class="td-left">차트</td><td>57</td><td class="td-left"><span class="chip chip-plain">오현주</span><span class="chip chip-plain">황준혁</span></td><td class="td-left"><span class="chip chip-checker">전혜연</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">전혜연</span><div class="pd-bar"><div class="pd-bar-fill" style="width:100%;background:#22c55e"></div></div><span class="pd-tag tag-done">검토완료 ✓</span></div></div></td></tr>
-            <tr><td class="td-left">종합/미니</td><td>55</td><td class="td-left"><span class="chip chip-plain">전혜연</span><span class="chip chip-plain">김은경</span></td><td class="td-left"><span class="chip chip-checker">장소윤</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">장소윤</span><div class="pd-bar"><div class="pd-bar-fill" style="width:0%;background:#ef4444"></div></div><span class="pd-tag tag-gray">미시작</span></div></div></td></tr>
-            <tr><td class="td-left">ETF/ETN/ELW</td><td>51</td><td class="td-left"><span class="chip chip-plain">장소윤</span></td><td class="td-left"><span class="chip chip-checker">김관영</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">김관영</span><span class="pd-tag tag-time">오전내 완료예정</span></div></div></td></tr>
-            <tr><td class="td-left">뱅킹/공모주/대출</td><td>17</td><td class="td-left"><span class="chip chip-plain">유진홍</span></td><td class="td-left"><span class="chip chip-checker">박혜상</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">박혜상</span><div class="pd-bar"><div class="pd-bar-fill" style="width:80%;background:#3b82f6"></div></div><span class="pd-tag tag-today">80% · 오늘 완료</span></div></div></td></tr>
-            <tr><td class="td-left">신용/대자</td><td>21</td><td class="td-left"><span class="chip chip-plain">김은경</span></td><td class="td-left"><span class="chip chip-checker">박선복</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">박선복</span><div class="pd-bar"><div class="pd-bar-fill" style="width:100%;background:#22c55e"></div></div><span class="pd-tag tag-done">완료 ✓</span></div></div></td></tr>
-            <tr><td class="td-left">공통/홈</td><td>3</td><td class="td-left"><span class="chip chip-plain">유진홍</span></td><td class="td-left"><span class="chip chip-checker">김은경</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">김은경</span><div class="pd-bar"><div class="pd-bar-fill" style="width:100%;background:#22c55e"></div></div><span class="pd-tag tag-done">완료 ✓</span></div></div></td></tr>
-            <tr><td class="td-left">설정/도우미</td><td>2</td><td class="td-left"><span class="chip chip-plain">황준혁</span></td><td class="td-left"><span class="chip chip-checker">전혜연</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu" style="min-width:42px">전혜연</span><div class="pd-bar"><div class="pd-bar-fill" style="width:100%;background:#22c55e"></div></div><span class="pd-tag tag-done">오전 검토완료 ✓</span></div></div></td></tr>
-          </tbody>
+          <thead><tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left">크로스체크</th><th class="td-left" style="min-width:200px">진행 현황</th></tr></thead>
+          <tbody id="cx-assign-body"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- 카드 2: 담당자별 화면수 -->
+    <div class="card" style="margin-bottom:var(--space-5)">
+      <div class="card-header"><span class="dot" style="background:#f97316"></span>크로스체크 담당자별 화면수</div>
+      <table>
+        <thead><tr><th class="td-left">담당자</th><th class="td-left">담당 메뉴</th><th>화면수</th><th style="min-width:120px">부하량</th><th>크로스체크 상태</th></tr></thead>
+        <tbody id="cx-summary-body"></tbody>
+      </table>
+    </div>
+
+    <!-- 카드 3: 데일리 작업 기록 -->
+    <div class="card" style="margin-bottom:var(--space-5)">
+      <div class="card-header">
+        <span class="dot" style="background:#3b82f6"></span>데일리 작업 기록
+        <div class="card-header-actions">
+          <button class="btn-sm" onclick="toggleDailyForm()">+ 추가</button>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header"><span class="dot" style="background:#f97316"></span>크로스체크 담당자별 화면수</div>
-        <table>
-          <thead><tr><th class="td-left">담당자</th><th class="td-left">담당 메뉴</th><th>화면수</th><th style="min-width:120px">부하량</th><th>크로스체크 상태</th></tr></thead>
-          <tbody>
-            <tr><td class="td-left td-bold">박혜상</td><td class="td-left" style="color:#909090;font-size:11px">투자정보, 뱅킹/공모주/대출</td><td>84</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:37%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td></tr>
-            <tr><td class="td-left td-bold">박선복</td><td class="td-left" style="color:#909090;font-size:11px">잔고평가, 신용/대자</td><td>95</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:42%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td></tr>
-            <tr><td class="td-left td-bold">오문숙</td><td class="td-left" style="color:#909090;font-size:11px">해외주식</td><td>116</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:51%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td></tr>
-            <tr><td class="td-left td-bold">유진홍</td><td class="td-left" style="color:#909090;font-size:11px">주식</td><td>226</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-orange" style="width:100%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td></tr>
-            <tr><td class="td-left td-bold">김은경</td><td class="td-left" style="color:#909090;font-size:11px">온라인지점, 공통/홈</td><td>74</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:33%"></div></div></td><td><span class="badge badge-green">완료</span></td></tr>
-            <tr><td class="td-left td-bold">장소윤</td><td class="td-left" style="color:#909090;font-size:11px">종합/미니</td><td>55</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:24%"></div></div></td><td><span class="badge badge-red">미시작</span></td></tr>
-            <tr><td class="td-left td-bold">황준혁</td><td class="td-left" style="color:#909090;font-size:11px">금융상품</td><td>102</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:45%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td></tr>
-            <tr><td class="td-left td-bold">김관영</td><td class="td-left" style="color:#909090;font-size:11px">ETF/ETN/ELW</td><td>51</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:23%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td></tr>
-            <tr><td class="td-left td-bold">전혜연</td><td class="td-left" style="color:#909090;font-size:11px">차트, 설정/도우미</td><td>59</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td></tr>
-            <tr><td class="td-left td-bold">오현주</td><td class="td-left" style="color:#909090;font-size:11px">주문체결</td><td>75</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:33%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td></tr>
-            <tr><td class="td-left td-bold">허세빈</td><td class="td-left" style="color:#909090;font-size:11px">주식 (유진홍 배분분)</td><td>—</td><td></td><td><span class="badge badge-yellow">진행중</span></td></tr>
-            <tr><td class="td-left td-bold">이서후</td><td class="td-left" style="color:#909090;font-size:11px">선물옵션</td><td>104</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:46%"></div></div></td><td><span class="badge badge-red">미시작</span></td></tr>
-            <tr class="row-total"><td>합계</td><td></td><td>1,041</td><td>평균 87화면/인</td><td></td></tr>
-          </tbody>
+      <!-- 추가 폼 -->
+      <div class="add-form" id="daily-add-form">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">날짜</label><input class="form-input" id="dl-date" type="date" style="width:130px"></div>
+          <div class="form-group"><label class="form-label">검토자</label>
+            <select class="form-select" id="dl-checker" style="width:100px">
+              <option value="">선택</option>
+              <option>박혜상</option><option>박선복</option><option>오문숙</option><option>유진홍</option>
+              <option>김은경</option><option>장소윤</option><option>황준혁</option><option>김관영</option>
+              <option>전혜연</option><option>오현주</option><option>허세빈</option><option>이서후</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">메뉴</label>
+            <select class="form-select" id="dl-menu" style="width:130px">
+              <option value="">선택</option>
+              <option>주식</option><option>해외주식</option><option>선물옵션</option><option>금융상품</option>
+              <option>주문체결</option><option>잔고평가</option><option>온라인지점</option><option>투자정보</option>
+              <option>차트</option><option>종합/미니</option><option>ETF/ETN/ELW</option><option>신용/대자</option>
+              <option>뱅킹/공모주/대출</option><option>공통/홈</option><option>설정/도우미</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">완료 화면수</label><input class="form-input" id="dl-count" type="number" min="0" style="width:80px" placeholder="0"></div>
+          <div class="form-group"><label class="form-label">비고</label><input class="form-input" id="dl-notes" type="text" style="width:200px" placeholder="메모"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-submit" onclick="submitDailyLog()">저장</button>
+          <button class="btn-cancel-form" onclick="toggleDailyForm()">취소</button>
+        </div>
+      </div>
+      <!-- 날짜별 탭 -->
+      <div id="daily-day-tabs" style="padding:var(--space-3) var(--space-5) 0"></div>
+      <!-- 날짜별 패널 -->
+      <div id="daily-panels"></div>
+    </div>
+
+    <!-- 카드 4: 검토 완료 파일 리스트 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="dot" style="background:#22c55e"></span>검토 완료 파일 리스트
+        <div class="card-header-actions">
+          <button class="btn-sm" onclick="toggleFileForm()">+ 추가</button>
+        </div>
+      </div>
+      <!-- 추가 폼 -->
+      <div class="add-form" id="file-add-form">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">메뉴</label>
+            <select class="form-select" id="rf-menu" style="width:130px">
+              <option value="">선택</option>
+              <option>주식</option><option>해외주식</option><option>선물옵션</option><option>금융상품</option>
+              <option>주문체결</option><option>잔고평가</option><option>온라인지점</option><option>투자정보</option>
+              <option>차트</option><option>종합/미니</option><option>ETF/ETN/ELW</option><option>신용/대자</option>
+              <option>뱅킹/공모주/대출</option><option>공통/홈</option><option>설정/도우미</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">화면명</label><input class="form-input" id="rf-screen" type="text" style="width:180px" placeholder="화면명 입력"></div>
+          <div class="form-group"><label class="form-label">검토자</label>
+            <select class="form-select" id="rf-checker" style="width:100px">
+              <option value="">선택</option>
+              <option>박혜상</option><option>박선복</option><option>오문숙</option><option>유진홍</option>
+              <option>김은경</option><option>장소윤</option><option>황준혁</option><option>김관영</option>
+              <option>전혜연</option><option>오현주</option><option>허세빈</option><option>이서후</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">검토일</label><input class="form-input" id="rf-date" type="date" style="width:130px"></div>
+          <div class="form-group"><label class="form-label">상태</label>
+            <select class="form-select" id="rf-status" style="width:110px">
+              <option>이상없음</option><option>이슈발견</option><option>재검토필요</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">비고</label><input class="form-input" id="rf-notes" type="text" style="width:200px" placeholder="메모"></div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-submit" onclick="submitReviewFile()">저장</button>
+          <button class="btn-cancel-form" onclick="toggleFileForm()">취소</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="min-width:700px">
+          <thead><tr><th class="td-left">메뉴</th><th class="td-left" style="min-width:160px">화면명</th><th class="td-left">검토자</th><th>검토일</th><th>상태</th><th class="td-left">비고</th><th style="width:60px"></th></tr></thead>
+          <tbody id="review-files-body"></tbody>
         </table>
       </div>
+    </div>
+
   </div>
 
 </div>
 
 <script>
+// ── 탭 전환 ──
 function switchTab(btn, id) {
-  document.querySelectorAll('.tab-btn').forEach(function(b) {
-    b.classList.remove('active');
-  });
-  document.querySelectorAll('.tab-pane').forEach(function(pane) {
-    pane.classList.remove('active');
-  });
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-' + id).classList.add('active');
 }
+
+// ── 크로스체크 데이터 ──
+const menuData = [
+  {menu:'주식',screens:226,authors:['박선복','장소윤','이서후'],checkers:['유진홍','허세빈'],rows:[{name:'유진홍',pct:50,tag:'50% 진행중',tagCls:'tag-today'},{name:'허세빈',pct:0,tag:'미진행',tagCls:'tag-warn'}]},
+  {menu:'해외주식',screens:116,authors:['박혜상'],checkers:['오문숙'],rows:[{name:'오문숙',pct:70,tag:'70% · 오후3시',tagCls:'tag-time'}]},
+  {menu:'선물옵션',screens:104,authors:['박선복','황준혁'],checkers:['이서후'],rows:[{name:'이서후',pct:0,tag:'오늘 마무리',tagCls:'tag-time'}]},
+  {menu:'금융상품',screens:102,authors:['오문숙'],checkers:['황준혁'],rows:[{name:'황준혁',pct:0,tag:'오후 4시 마무리',tagCls:'tag-time'}]},
+  {menu:'주문체결',screens:75,authors:['오문숙','김관영','허세빈'],checkers:['오현주'],rows:[{name:'오현주',pct:0,tag:'—',tagCls:'tag-gray'}]},
+  {menu:'잔고평가',screens:74,authors:['유진홍'],checkers:['박선복'],rows:[{name:'박선복',pct:20,tag:'20% · 완료 미정',tagCls:'tag-warn'}]},
+  {menu:'온라인지점',screens:71,authors:['김관영'],checkers:['김은경'],rows:[{name:'김은경',pct:100,tag:'완료 ✓',tagCls:'tag-done'}]},
+  {menu:'투자정보',screens:67,authors:['허세빈','김은경'],checkers:['박혜상'],rows:[{name:'박혜상',pct:50,tag:'50% · 오늘완료예정',tagCls:'tag-today'}]},
+  {menu:'차트',screens:57,authors:['오현주','황준혁'],checkers:['전혜연'],rows:[{name:'전혜연',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}]},
+  {menu:'종합/미니',screens:55,authors:['전혜연','김은경'],checkers:['장소윤'],rows:[{name:'장소윤',pct:0,tag:'미시작',tagCls:'tag-gray'}]},
+  {menu:'ETF/ETN/ELW',screens:51,authors:['장소윤'],checkers:['김관영'],rows:[{name:'김관영',pct:0,tag:'오전내 완료예정',tagCls:'tag-time'}]},
+  {menu:'신용/대자',screens:21,authors:['김은경'],checkers:['박선복'],rows:[{name:'박선복',pct:100,tag:'완료 ✓',tagCls:'tag-done'}]},
+  {menu:'뱅킹/공모주/대출',screens:17,authors:['유진홍'],checkers:['박혜상'],rows:[{name:'박혜상',pct:80,tag:'80% · 오늘 완료',tagCls:'tag-today'}]},
+  {menu:'공통/홈',screens:3,authors:['유진홍'],checkers:['김은경'],rows:[{name:'김은경',pct:100,tag:'완료 ✓',tagCls:'tag-done'}]},
+  {menu:'설정/도우미',screens:2,authors:['황준혁'],checkers:['전혜연'],rows:[{name:'전혜연',pct:100,tag:'오전 검토완료 ✓',tagCls:'tag-done'}]},
+];
+
+const checkerSummary = [
+  {name:'박혜상',menus:'투자정보, 뱅킹/공모주/대출',screens:84,pct:37,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'박선복',menus:'잔고평가, 신용/대자',screens:95,pct:42,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'오문숙',menus:'해외주식',screens:116,pct:51,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'유진홍',menus:'주식',screens:226,pct:100,barCls:'bar-orange',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'김은경',menus:'온라인지점, 공통/홈',screens:74,pct:33,barCls:'bar-blue',status:'완료',badgeCls:'badge-green'},
+  {name:'장소윤',menus:'종합/미니',screens:55,pct:24,barCls:'bar-blue',status:'미시작',badgeCls:'badge-red'},
+  {name:'황준혁',menus:'금융상품',screens:102,pct:45,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'김관영',menus:'ETF/ETN/ELW',screens:51,pct:23,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'전혜연',menus:'차트, 설정/도우미',screens:59,pct:100,barCls:'bar-green',status:'완료',badgeCls:'badge-green'},
+  {name:'오현주',menus:'주문체결',screens:75,pct:33,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'허세빈',menus:'주식 (유진홍 배분분)',screens:0,pct:0,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'이서후',menus:'선물옵션',screens:104,pct:46,barCls:'bar-blue',status:'미시작',badgeCls:'badge-red'},
+];
+
+let editMode = false;
+let dailyLog = JSON.parse(localStorage.getItem('cx_daily') || '[]');
+let reviewFiles = JSON.parse(localStorage.getItem('cx_files') || '[]');
+
+// ── 편집 모드 ──
+function toggleEditMode() {
+  editMode = !editMode;
+  const btn = document.getElementById('editModeBtn');
+  btn.textContent = editMode ? '✓ 편집 종료' : '✏️ 편집 모드';
+  btn.classList.toggle('on', editMode);
+  renderCrosscheckTable();
+  renderCheckerSummary();
+}
+
+function renderCrosscheckTable() {
+  document.getElementById('cx-assign-body').innerHTML = menuData.map((m, mi) => `
+    <tr>
+      <td class="td-left">${m.menu}</td>
+      <td>${m.screens}</td>
+      <td class="td-left">${m.authors.map(a=>`<span class="chip chip-plain">${a}</span>`).join('')}</td>
+      <td class="td-left">${m.checkers.map(c=>`<span class="chip chip-checker">${c}</span>`).join('')}</td>
+      <td>
+        <div class="pd-wrap">
+          ${m.rows.map((r,ri) => editMode ? `
+            <div class="pd-row" style="gap:5px;flex-wrap:wrap">
+              <input class="edit-input" style="width:65px" value="${r.name}" onchange="menuData[${mi}].rows[${ri}].name=this.value">
+              <input class="edit-input" style="width:44px" type="number" min="0" max="100" value="${r.pct}" onchange="menuData[${mi}].rows[${ri}].pct=+this.value;renderCrosscheckTable()">%
+              <input class="edit-input" style="width:110px" value="${r.tag}" onchange="menuData[${mi}].rows[${ri}].tag=this.value">
+              <button class="btn-sm danger" style="font-size:10px;padding:1px 5px" onclick="menuData[${mi}].rows.splice(${ri},1);renderCrosscheckTable()">×</button>
+            </div>
+          ` : `
+            <div class="pd-row">
+              <span class="pd-menu" style="min-width:42px">${r.name}</span>
+              ${r.pct>0?`<div class="pd-bar"><div class="pd-bar-fill" style="width:${r.pct}%;background:${r.pct>=100?'#22c55e':r.pct>=50?'#3b82f6':'#ef4444'}"></div></div>`:''}
+              <span class="pd-tag ${r.tagCls}">${r.tag}</span>
+            </div>
+          `).join('')}
+          ${editMode ? `<button class="btn-sm" style="font-size:10px;margin-top:3px" onclick="menuData[${mi}].rows.push({name:'',pct:0,tag:'',tagCls:'tag-gray'});renderCrosscheckTable()">+ 행 추가</button>` : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderCheckerSummary() {
+  document.getElementById('cx-summary-body').innerHTML = checkerSummary.map((c,ci) => editMode ? `
+    <tr>
+      <td class="td-left td-bold">${c.name}</td>
+      <td class="td-left"><input class="edit-input" style="width:180px" value="${c.menus}" onchange="checkerSummary[${ci}].menus=this.value"></td>
+      <td><input class="edit-input" style="width:50px" type="number" value="${c.screens}" onchange="checkerSummary[${ci}].screens=+this.value"></td>
+      <td><input class="edit-input" style="width:44px" type="number" min="0" max="100" value="${c.pct}" onchange="checkerSummary[${ci}].pct=+this.value;renderCheckerSummary()">%</td>
+      <td>
+        <select class="edit-select" onchange="checkerSummary[${ci}].status=this.value;checkerSummary[${ci}].badgeCls=this.value==='완료'?'badge-green':this.value==='미시작'?'badge-red':'badge-yellow';renderCheckerSummary()">
+          <option ${c.status==='완료'?'selected':''}>완료</option>
+          <option ${c.status==='진행중'?'selected':''}>진행중</option>
+          <option ${c.status==='미시작'?'selected':''}>미시작</option>
+        </select>
+      </td>
+    </tr>
+  ` : `
+    <tr>
+      <td class="td-left td-bold">${c.name}</td>
+      <td class="td-left" style="color:#909090;font-size:11px">${c.menus}</td>
+      <td>${c.screens||'—'}</td>
+      <td><div class="bar" style="height:14px"><div class="bar-fill ${c.barCls}" style="width:${c.pct}%"></div></div></td>
+      <td><span class="badge ${c.badgeCls}">${c.status}</span></td>
+    </tr>
+  `).join('') + `<tr class="row-total"><td>합계</td><td></td><td>1,041</td><td>평균 87화면/인</td><td></td></tr>`;
+}
+
+// ── 데일리 로그 ──
+function saveDailyLog() { localStorage.setItem('cx_daily', JSON.stringify(dailyLog)); }
+
+function renderDailyLog() {
+  const tabsWrap = document.getElementById('daily-day-tabs');
+  const panelsWrap = document.getElementById('daily-panels');
+  if (!dailyLog.length) {
+    tabsWrap.innerHTML = '';
+    panelsWrap.innerHTML = '<div style="padding:20px var(--space-5);color:#909090;font-size:var(--font-size-sm)">기록된 내용이 없습니다. + 추가로 기록해주세요.</div>';
+    return;
+  }
+  const dates = [...new Set(dailyLog.map(r=>r.date))].sort((a,b)=>b.localeCompare(a));
+  const activeDateKey = 'cx_active_date';
+  let activeDate = sessionStorage.getItem(activeDateKey) || dates[0];
+  if (!dates.includes(activeDate)) activeDate = dates[0];
+
+  tabsWrap.innerHTML = `<div class="day-tabs">${dates.map(d=>`
+    <button class="day-tab${d===activeDate?' active':''}" onclick="setDailyDate('${d}')">${d.slice(5).replace('-','/')}</button>
+  `).join('')}</div>`;
+
+  const entries = dailyLog.filter(r=>r.date===activeDate).sort((a,b)=>a.checker.localeCompare(b.checker));
+  panelsWrap.innerHTML = `
+    <div style="overflow-x:auto">
+      <table style="min-width:600px">
+        <thead><tr>
+          <th class="td-left">검토자</th>
+          <th class="td-left">메뉴</th>
+          <th>완료 화면수</th>
+          <th class="td-left">비고</th>
+          <th style="width:60px"></th>
+        </tr></thead>
+        <tbody>
+          ${entries.length ? entries.map(r=>`
+            <tr>
+              <td class="td-left"><span class="chip chip-checker">${r.checker}</span></td>
+              <td class="td-left"><span class="chip chip-plain">${r.menu}</span></td>
+              <td>${r.count||0}</td>
+              <td class="td-left" style="color:#555;font-size:11px">${r.notes||'—'}</td>
+              <td><button class="btn-sm danger" onclick="deleteDailyLog('${r.id}')">삭제</button></td>
+            </tr>
+          `).join('') : `<tr><td colspan="5" style="text-align:center;color:#909090;padding:16px">이 날짜에 기록이 없습니다</td></tr>`}
+          ${entries.length ? `<tr class="row-total"><td>합계</td><td></td><td>${entries.reduce((s,r)=>s+(+r.count||0),0)}</td><td colspan="2"></td></tr>` : ''}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function setDailyDate(date) {
+  sessionStorage.setItem('cx_active_date', date);
+  renderDailyLog();
+}
+
+function toggleDailyForm() {
+  document.getElementById('daily-add-form').classList.toggle('show');
+}
+
+function submitDailyLog() {
+  const date = document.getElementById('dl-date').value;
+  const checker = document.getElementById('dl-checker').value;
+  const menu = document.getElementById('dl-menu').value;
+  const count = document.getElementById('dl-count').value;
+  const notes = document.getElementById('dl-notes').value;
+  if (!date||!checker||!menu) { alert('날짜, 검토자, 메뉴는 필수입니다.'); return; }
+  dailyLog.push({id:Date.now()+'', date, checker, menu, count:+count||0, notes});
+  saveDailyLog();
+  renderDailyLog();
+  document.getElementById('daily-add-form').classList.remove('show');
+  document.getElementById('dl-checker').value='';
+  document.getElementById('dl-menu').value='';
+  document.getElementById('dl-count').value='';
+  document.getElementById('dl-notes').value='';
+}
+
+function deleteDailyLog(id) {
+  if (!confirm('삭제할까요?')) return;
+  dailyLog = dailyLog.filter(r=>r.id!==id);
+  saveDailyLog();
+  renderDailyLog();
+}
+
+// ── 검토 파일 리스트 ──
+function saveReviewFiles() { localStorage.setItem('cx_files', JSON.stringify(reviewFiles)); }
+
+function renderReviewFiles() {
+  const tbody = document.getElementById('review-files-body');
+  if (!reviewFiles.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#909090;padding:20px">검토 완료된 파일을 등록해주세요.</td></tr>';
+    return;
+  }
+  const sorted = [...reviewFiles].sort((a,b)=>b.date.localeCompare(a.date));
+  tbody.innerHTML = sorted.map(r=>{
+    const sCls = r.status==='이상없음'?'badge-ok':r.status==='이슈발견'?'badge-issue':'badge-recheck';
+    return `<tr>
+      <td class="td-left"><span class="chip chip-plain">${r.menu}</span></td>
+      <td class="td-left">${r.screenName}</td>
+      <td class="td-left"><span class="chip chip-checker">${r.checker}</span></td>
+      <td>${r.date.slice(5).replace('-','/')}</td>
+      <td><span class="badge ${sCls}">${r.status}</span></td>
+      <td class="td-left" style="color:#555;font-size:11px">${r.notes||'—'}</td>
+      <td><button class="btn-sm danger" onclick="deleteReviewFile('${r.id}')">삭제</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function toggleFileForm() {
+  document.getElementById('file-add-form').classList.toggle('show');
+}
+
+function submitReviewFile() {
+  const menu = document.getElementById('rf-menu').value;
+  const screenName = document.getElementById('rf-screen').value.trim();
+  const checker = document.getElementById('rf-checker').value;
+  const date = document.getElementById('rf-date').value;
+  const status = document.getElementById('rf-status').value;
+  const notes = document.getElementById('rf-notes').value;
+  if (!menu||!screenName||!checker||!date) { alert('메뉴, 화면명, 검토자, 날짜는 필수입니다.'); return; }
+  reviewFiles.push({id:Date.now()+'', menu, screenName, checker, date, status, notes});
+  saveReviewFiles();
+  renderReviewFiles();
+  document.getElementById('file-add-form').classList.remove('show');
+  document.getElementById('rf-menu').value='';
+  document.getElementById('rf-screen').value='';
+  document.getElementById('rf-checker').value='';
+  document.getElementById('rf-notes').value='';
+}
+
+function deleteReviewFile(id) {
+  if (!confirm('삭제할까요?')) return;
+  reviewFiles = reviewFiles.filter(r=>r.id!==id);
+  saveReviewFiles();
+  renderReviewFiles();
+}
+
+// ── 초기화 ──
+document.addEventListener('DOMContentLoaded', function() {
+  renderCrosscheckTable();
+  renderCheckerSummary();
+  renderDailyLog();
+  renderReviewFiles();
+  const today = '2026-05-28';
+  document.getElementById('dl-date').value = today;
+  document.getElementById('rf-date').value = today;
+});
 </script>
 </body>
 </html>
