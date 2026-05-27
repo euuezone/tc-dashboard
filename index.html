@@ -543,16 +543,16 @@ function switchTab(btn, id) {
 
 // ── 크로스체크 정적 구조 (메뉴/작성자/검토자) ──
 const menuBase = [
-  {menu:'주식',screens:226,authors:['박선복','장소윤','이서후'],checkers:['유진홍','허세빈']},
+  {menu:'주식',screens:226,authors:['박선복','장소윤','이서후'],checkers:['유진홍','전혜연']},
   {menu:'해외주식',screens:116,authors:['박혜상'],checkers:['오문숙']},
-  {menu:'선물옵션',screens:104,authors:['박선복','황준혁'],checkers:['이서후']},
+  {menu:'선물옵션',screens:104,authors:['박선복','황준혁'],checkers:['오문숙']},
   {menu:'금융상품',screens:102,authors:['오문숙'],checkers:['황준혁']},
-  {menu:'주문체결',screens:75,authors:['오문숙','김관영','허세빈'],checkers:['오현주']},
+  {menu:'주문체결',screens:75,authors:['오문숙','김관영','허세빈'],checkers:['장소윤']},
   {menu:'잔고평가',screens:74,authors:['유진홍'],checkers:['박선복']},
   {menu:'온라인지점',screens:71,authors:['김관영'],checkers:['김은경']},
   {menu:'투자정보',screens:67,authors:['허세빈','김은경'],checkers:['박혜상']},
   {menu:'차트',screens:57,authors:['오현주','황준혁'],checkers:['전혜연']},
-  {menu:'종합/미니',screens:55,authors:['전혜연','김은경'],checkers:['장소윤']},
+  {menu:'종합/미니',screens:55,authors:['전혜연','김은경'],checkers:['김은경']},
   {menu:'ETF/ETN/ELW',screens:51,authors:['장소윤'],checkers:['김관영']},
   {menu:'신용/대자',screens:21,authors:['김은경'],checkers:['박선복']},
   {menu:'뱅킹/공모주/대출',screens:17,authors:['유진홍'],checkers:['박혜상']},
@@ -579,19 +579,18 @@ const defaultRows27 = {
   '설정/도우미':[{name:'전혜연',pct:100,tag:'오전 검토완료 ✓',tagCls:'tag-done'}],
 };
 
-// 05/28 진행 현황 (검토 완료 13개 메뉴 반영)
-const done28 = [{pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}];
+// 05/28 진행 현황 (검토 완료 13개 메뉴 + 담당자 변경 반영)
 const defaultRows28 = {
-  '주식':[{name:'유진홍',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'},{name:'허세빈',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '주식':[{name:'유진홍',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'},{name:'전혜연',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '해외주식':[{name:'오문숙',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
-  '선물옵션':[{name:'이서후',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '선물옵션':[{name:'오문숙',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '금융상품':[{name:'황준혁',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
-  '주문체결':[{name:'오현주',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '주문체결':[{name:'장소윤',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '잔고평가':[{name:'박선복',pct:20,tag:'20% · 진행중',tagCls:'tag-warn'}],
   '온라인지점':[{name:'김은경',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '투자정보':[{name:'박혜상',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '차트':[{name:'전혜연',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
-  '종합/미니':[{name:'장소윤',pct:0,tag:'미시작',tagCls:'tag-gray'}],
+  '종합/미니':[{name:'김은경',pct:0,tag:'미시작',tagCls:'tag-gray'}],
   'ETF/ETN/ELW':[{name:'김관영',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '신용/대자':[{name:'박선복',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '뱅킹/공모주/대출':[{name:'박혜상',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
@@ -606,6 +605,16 @@ const defaultConfirm28 = {
   '신용/대자':true,'뱅킹/공모주/대출':true,'공통/홈':true,'설정/도우미':true,
 };
 
+// 데이터 버전 — 담당자 변경 시 이 값을 올리면 localStorage 강제 갱신
+const DATA_VERSION = 'v20260528-2';
+
+// 버전 불일치 시 초기화
+if (localStorage.getItem('cx_version') !== DATA_VERSION) {
+  localStorage.removeItem('cx_assign');
+  localStorage.removeItem('cx_confirm');
+  localStorage.setItem('cx_version', DATA_VERSION);
+}
+
 // 날짜별 배분 현황 저장소
 let assignByDate = JSON.parse(localStorage.getItem('cx_assign') || 'null');
 if (!assignByDate) {
@@ -616,12 +625,6 @@ if (!assignByDate) {
   localStorage.setItem('cx_assign', JSON.stringify(assignByDate));
 }
 if (!assignByDate['2026-05-28']) {
-  assignByDate['2026-05-28'] = JSON.parse(JSON.stringify(defaultRows28));
-  localStorage.setItem('cx_assign', JSON.stringify(assignByDate));
-}
-// 05/28 데이터가 구버전(05/27 복사본)이면 최신으로 교체
-if (assignByDate['2026-05-28'] && assignByDate['2026-05-28']['주식'] &&
-    assignByDate['2026-05-28']['주식'][0] && assignByDate['2026-05-28']['주식'][0].pct < 100) {
   assignByDate['2026-05-28'] = JSON.parse(JSON.stringify(defaultRows28));
   localStorage.setItem('cx_assign', JSON.stringify(assignByDate));
 }
@@ -647,18 +650,18 @@ function toggleConfirm(date, menu) {
 }
 
 const checkerSummary = [
-  {name:'박혜상',menus:'투자정보, 뱅킹/공모주/대출',screens:84,pct:37,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
-  {name:'박선복',menus:'잔고평가, 신용/대자',screens:95,pct:42,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
-  {name:'오문숙',menus:'해외주식',screens:116,pct:51,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
-  {name:'유진홍',menus:'주식',screens:226,pct:100,barCls:'bar-orange',status:'진행중',badgeCls:'badge-yellow'},
-  {name:'김은경',menus:'온라인지점, 공통/홈',screens:74,pct:33,barCls:'bar-blue',status:'완료',badgeCls:'badge-green'},
-  {name:'장소윤',menus:'종합/미니',screens:55,pct:24,barCls:'bar-blue',status:'미시작',badgeCls:'badge-red'},
-  {name:'황준혁',menus:'금융상품',screens:102,pct:45,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
-  {name:'김관영',menus:'ETF/ETN/ELW',screens:51,pct:23,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
-  {name:'전혜연',menus:'차트, 설정/도우미',screens:59,pct:100,barCls:'bar-green',status:'완료',badgeCls:'badge-green'},
-  {name:'오현주',menus:'주문체결',screens:75,pct:33,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
-  {name:'허세빈',menus:'주식 (유진홍 배분분)',screens:0,pct:0,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
-  {name:'이서후',menus:'선물옵션',screens:104,pct:46,barCls:'bar-blue',status:'미시작',badgeCls:'badge-red'},
+  {name:'박혜상',menus:'투자정보, 뱅킹/공모주/대출',screens:84,pct:100,barCls:'bar-green',status:'완료',badgeCls:'badge-green'},
+  {name:'박선복',menus:'잔고평가, 신용/대자',screens:95,pct:60,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'오문숙',menus:'해외주식, 선물옵션',screens:220,pct:100,barCls:'bar-green',status:'완료',badgeCls:'badge-green'},
+  {name:'유진홍',menus:'주식',screens:226,pct:100,barCls:'bar-green',status:'완료',badgeCls:'badge-green'},
+  {name:'김은경',menus:'온라인지점, 공통/홈, 종합/미니',screens:129,pct:60,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
+  {name:'장소윤',menus:'주문체결',screens:75,pct:100,barCls:'bar-green',status:'완료',badgeCls:'badge-green'},
+  {name:'황준혁',menus:'금융상품',screens:102,pct:100,barCls:'bar-green',status:'완료',badgeCls:'badge-green'},
+  {name:'김관영',menus:'ETF/ETN/ELW',screens:51,pct:100,barCls:'bar-green',status:'완료',badgeCls:'badge-green'},
+  {name:'전혜연',menus:'주식, 차트, 설정/도우미',screens:285,pct:100,barCls:'bar-green',status:'완료',badgeCls:'badge-green'},
+  {name:'오현주',menus:'—',screens:0,pct:0,barCls:'bar-blue',status:'미배정',badgeCls:'badge-red'},
+  {name:'허세빈',menus:'—',screens:0,pct:0,barCls:'bar-blue',status:'미배정',badgeCls:'badge-red'},
+  {name:'이서후',menus:'—',screens:0,pct:0,barCls:'bar-blue',status:'미배정',badgeCls:'badge-red'},
 ];
 
 let editMode = false;
