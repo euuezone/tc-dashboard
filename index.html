@@ -586,11 +586,11 @@ const defaultRows28 = {
   '선물옵션':[{name:'오문숙',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '금융상품':[{name:'황준혁',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '주문체결':[{name:'장소윤',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
-  '잔고평가':[{name:'박선복',pct:20,tag:'20% · 진행중',tagCls:'tag-warn'}],
+  '잔고평가':[{name:'박선복',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '온라인지점':[{name:'김은경',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '투자정보':[{name:'박혜상',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '차트':[{name:'전혜연',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
-  '종합/미니':[{name:'김은경',pct:0,tag:'미시작',tagCls:'tag-gray'}],
+  '종합/미니':[{name:'김은경',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   'ETF/ETN/ELW':[{name:'김관영',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '신용/대자':[{name:'박선복',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
   '뱅킹/공모주/대출':[{name:'박혜상',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
@@ -598,15 +598,11 @@ const defaultRows28 = {
   '설정/도우미':[{name:'전혜연',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
 };
 
-// 05/28 검토확인 초기값 (완료 13개 메뉴)
-const defaultConfirm28 = {
-  '주식':true,'해외주식':true,'선물옵션':true,'금융상품':true,'주문체결':true,
-  '온라인지점':true,'투자정보':true,'차트':true,'ETF/ETN/ELW':true,
-  '신용/대자':true,'뱅킹/공모주/대출':true,'공통/홈':true,'설정/도우미':true,
-};
+// 검토확인은 사용자가 직접 클릭 — 초기값 없음
+const defaultConfirm28 = {};
 
 // 데이터 버전 — 담당자 변경 시 이 값을 올리면 localStorage 강제 갱신
-const DATA_VERSION = 'v20260528-2';
+const DATA_VERSION = 'v20260528-3';
 
 // 버전 불일치 시 초기화
 if (localStorage.getItem('cx_version') !== DATA_VERSION) {
