@@ -418,14 +418,14 @@ tbody tr:hover td { background: var(--color-surface-hover); }
 </div>
 
 <script>
-function switchTab(id) {
-  document.querySelectorAll('.tab-btn').forEach(function(btn) {
-    btn.classList.remove('active');
+function switchTab(btn, id) {
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    b.classList.remove('active');
   });
   document.querySelectorAll('.tab-pane').forEach(function(pane) {
     pane.classList.remove('active');
   });
-  event.currentTarget.classList.add('active');
+  btn.classList.add('active');
   document.getElementById('tab-' + id).classList.add('active');
 }
 </script>
