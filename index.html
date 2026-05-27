@@ -407,11 +407,17 @@ tbody tr:hover td { background: var(--color-surface-hover); }
       <button class="btn-mode" id="editModeBtn" onclick="toggleEditMode()">✏️ 편집 모드</button>
     </div>
 
-    <!-- 카드 1: 배분 현황 -->
+    <!-- 카드 1: 배분 현황 (날짜별 탭) -->
     <div class="card" style="margin-bottom:var(--space-5)">
       <div class="card-header">
         <span class="dot" style="background:#a855f7"></span>크로스체크 담당자 배분 · 진행 현황
+        <div class="card-header-actions">
+          <button class="btn-sm" onclick="addAssignDate()">+ 날짜 추가</button>
+        </div>
       </div>
+      <!-- 날짜 탭 -->
+      <div id="assign-day-tabs" style="padding:0 var(--space-5);border-bottom:1px solid var(--color-border)"></div>
+      <!-- 테이블 -->
       <div style="overflow-x:auto">
         <table style="min-width:700px">
           <thead><tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left">크로스체크</th><th class="td-left" style="min-width:200px">진행 현황</th></tr></thead>
@@ -535,24 +541,51 @@ function switchTab(btn, id) {
   document.getElementById('tab-' + id).classList.add('active');
 }
 
-// ── 크로스체크 데이터 ──
-const menuData = [
-  {menu:'주식',screens:226,authors:['박선복','장소윤','이서후'],checkers:['유진홍','허세빈'],rows:[{name:'유진홍',pct:50,tag:'50% 진행중',tagCls:'tag-today'},{name:'허세빈',pct:0,tag:'미진행',tagCls:'tag-warn'}]},
-  {menu:'해외주식',screens:116,authors:['박혜상'],checkers:['오문숙'],rows:[{name:'오문숙',pct:70,tag:'70% · 오후3시',tagCls:'tag-time'}]},
-  {menu:'선물옵션',screens:104,authors:['박선복','황준혁'],checkers:['이서후'],rows:[{name:'이서후',pct:0,tag:'오늘 마무리',tagCls:'tag-time'}]},
-  {menu:'금융상품',screens:102,authors:['오문숙'],checkers:['황준혁'],rows:[{name:'황준혁',pct:0,tag:'오후 4시 마무리',tagCls:'tag-time'}]},
-  {menu:'주문체결',screens:75,authors:['오문숙','김관영','허세빈'],checkers:['오현주'],rows:[{name:'오현주',pct:0,tag:'—',tagCls:'tag-gray'}]},
-  {menu:'잔고평가',screens:74,authors:['유진홍'],checkers:['박선복'],rows:[{name:'박선복',pct:20,tag:'20% · 완료 미정',tagCls:'tag-warn'}]},
-  {menu:'온라인지점',screens:71,authors:['김관영'],checkers:['김은경'],rows:[{name:'김은경',pct:100,tag:'완료 ✓',tagCls:'tag-done'}]},
-  {menu:'투자정보',screens:67,authors:['허세빈','김은경'],checkers:['박혜상'],rows:[{name:'박혜상',pct:50,tag:'50% · 오늘완료예정',tagCls:'tag-today'}]},
-  {menu:'차트',screens:57,authors:['오현주','황준혁'],checkers:['전혜연'],rows:[{name:'전혜연',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}]},
-  {menu:'종합/미니',screens:55,authors:['전혜연','김은경'],checkers:['장소윤'],rows:[{name:'장소윤',pct:0,tag:'미시작',tagCls:'tag-gray'}]},
-  {menu:'ETF/ETN/ELW',screens:51,authors:['장소윤'],checkers:['김관영'],rows:[{name:'김관영',pct:0,tag:'오전내 완료예정',tagCls:'tag-time'}]},
-  {menu:'신용/대자',screens:21,authors:['김은경'],checkers:['박선복'],rows:[{name:'박선복',pct:100,tag:'완료 ✓',tagCls:'tag-done'}]},
-  {menu:'뱅킹/공모주/대출',screens:17,authors:['유진홍'],checkers:['박혜상'],rows:[{name:'박혜상',pct:80,tag:'80% · 오늘 완료',tagCls:'tag-today'}]},
-  {menu:'공통/홈',screens:3,authors:['유진홍'],checkers:['김은경'],rows:[{name:'김은경',pct:100,tag:'완료 ✓',tagCls:'tag-done'}]},
-  {menu:'설정/도우미',screens:2,authors:['황준혁'],checkers:['전혜연'],rows:[{name:'전혜연',pct:100,tag:'오전 검토완료 ✓',tagCls:'tag-done'}]},
+// ── 크로스체크 정적 구조 (메뉴/작성자/검토자) ──
+const menuBase = [
+  {menu:'주식',screens:226,authors:['박선복','장소윤','이서후'],checkers:['유진홍','허세빈']},
+  {menu:'해외주식',screens:116,authors:['박혜상'],checkers:['오문숙']},
+  {menu:'선물옵션',screens:104,authors:['박선복','황준혁'],checkers:['이서후']},
+  {menu:'금융상품',screens:102,authors:['오문숙'],checkers:['황준혁']},
+  {menu:'주문체결',screens:75,authors:['오문숙','김관영','허세빈'],checkers:['오현주']},
+  {menu:'잔고평가',screens:74,authors:['유진홍'],checkers:['박선복']},
+  {menu:'온라인지점',screens:71,authors:['김관영'],checkers:['김은경']},
+  {menu:'투자정보',screens:67,authors:['허세빈','김은경'],checkers:['박혜상']},
+  {menu:'차트',screens:57,authors:['오현주','황준혁'],checkers:['전혜연']},
+  {menu:'종합/미니',screens:55,authors:['전혜연','김은경'],checkers:['장소윤']},
+  {menu:'ETF/ETN/ELW',screens:51,authors:['장소윤'],checkers:['김관영']},
+  {menu:'신용/대자',screens:21,authors:['김은경'],checkers:['박선복']},
+  {menu:'뱅킹/공모주/대출',screens:17,authors:['유진홍'],checkers:['박혜상']},
+  {menu:'공통/홈',screens:3,authors:['유진홍'],checkers:['김은경']},
+  {menu:'설정/도우미',screens:2,authors:['황준혁'],checkers:['전혜연']},
 ];
+
+// 날짜별 진행 현황 기본값 (localStorage 없을 때)
+const defaultRows = {
+  '주식':[{name:'유진홍',pct:50,tag:'50% 진행중',tagCls:'tag-today'},{name:'허세빈',pct:0,tag:'미진행',tagCls:'tag-warn'}],
+  '해외주식':[{name:'오문숙',pct:70,tag:'70% · 오후3시',tagCls:'tag-time'}],
+  '선물옵션':[{name:'이서후',pct:0,tag:'오늘 마무리',tagCls:'tag-time'}],
+  '금융상품':[{name:'황준혁',pct:0,tag:'오후 4시 마무리',tagCls:'tag-time'}],
+  '주문체결':[{name:'오현주',pct:0,tag:'—',tagCls:'tag-gray'}],
+  '잔고평가':[{name:'박선복',pct:20,tag:'20% · 완료 미정',tagCls:'tag-warn'}],
+  '온라인지점':[{name:'김은경',pct:100,tag:'완료 ✓',tagCls:'tag-done'}],
+  '투자정보':[{name:'박혜상',pct:50,tag:'50% · 오늘완료예정',tagCls:'tag-today'}],
+  '차트':[{name:'전혜연',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '종합/미니':[{name:'장소윤',pct:0,tag:'미시작',tagCls:'tag-gray'}],
+  'ETF/ETN/ELW':[{name:'김관영',pct:0,tag:'오전내 완료예정',tagCls:'tag-time'}],
+  '신용/대자':[{name:'박선복',pct:100,tag:'완료 ✓',tagCls:'tag-done'}],
+  '뱅킹/공모주/대출':[{name:'박혜상',pct:80,tag:'80% · 오늘 완료',tagCls:'tag-today'}],
+  '공통/홈':[{name:'김은경',pct:100,tag:'완료 ✓',tagCls:'tag-done'}],
+  '설정/도우미':[{name:'전혜연',pct:100,tag:'오전 검토완료 ✓',tagCls:'tag-done'}],
+};
+
+// 날짜별 배분 현황 저장소: { "2026-05-27": { "주식": [{...}], ... } }
+let assignByDate = JSON.parse(localStorage.getItem('cx_assign') || 'null');
+if (!assignByDate) {
+  assignByDate = { '2026-05-27': JSON.parse(JSON.stringify(defaultRows)) };
+  localStorage.setItem('cx_assign', JSON.stringify(assignByDate));
+}
+let activeAssignDate = Object.keys(assignByDate).sort().reverse()[0];
 
 const checkerSummary = [
   {name:'박혜상',menus:'투자정보, 뱅킹/공모주/대출',screens:84,pct:37,barCls:'bar-blue',status:'진행중',badgeCls:'badge-yellow'},
@@ -573,31 +606,67 @@ let editMode = false;
 let dailyLog = JSON.parse(localStorage.getItem('cx_daily') || '[]');
 let reviewFiles = JSON.parse(localStorage.getItem('cx_files') || '[]');
 
+function saveAssign() { localStorage.setItem('cx_assign', JSON.stringify(assignByDate)); }
+
+// ── 날짜 탭 추가 ──
+function addAssignDate() {
+  const input = prompt('추가할 날짜를 입력하세요 (예: 2026-05-29)');
+  if (!input || !input.match(/^\d{4}-\d{2}-\d{2}$/)) { alert('날짜 형식을 확인해주세요 (YYYY-MM-DD)'); return; }
+  if (assignByDate[input]) { alert('이미 존재하는 날짜입니다.'); return; }
+  // 가장 최근 날짜 데이터를 복사해서 새 날짜 초기화
+  const latestDate = Object.keys(assignByDate).sort().reverse()[0];
+  assignByDate[input] = JSON.parse(JSON.stringify(assignByDate[latestDate]));
+  saveAssign();
+  activeAssignDate = input;
+  renderAssignTabs();
+  renderCrosscheckTable();
+}
+
+function setAssignDate(date) {
+  activeAssignDate = date;
+  renderAssignTabs();
+  renderCrosscheckTable();
+}
+
 // ── 편집 모드 ──
 function toggleEditMode() {
   editMode = !editMode;
   const btn = document.getElementById('editModeBtn');
   btn.textContent = editMode ? '✓ 편집 종료' : '✏️ 편집 모드';
   btn.classList.toggle('on', editMode);
+  if (!editMode) saveAssign();
+  renderAssignTabs();
   renderCrosscheckTable();
   renderCheckerSummary();
 }
 
+function renderAssignTabs() {
+  const dates = Object.keys(assignByDate).sort().reverse();
+  document.getElementById('assign-day-tabs').innerHTML = `
+    <div class="day-tabs" style="border-bottom:none">
+      ${dates.map(d => `
+        <button class="day-tab${d===activeAssignDate?' active':''}" onclick="setAssignDate('${d}')">${d.slice(5).replace('-','/')}</button>
+      `).join('')}
+    </div>`;
+}
+
 function renderCrosscheckTable() {
-  document.getElementById('cx-assign-body').innerHTML = menuData.map((m, mi) => `
-    <tr>
+  const rows = assignByDate[activeAssignDate] || {};
+  document.getElementById('cx-assign-body').innerHTML = menuBase.map((m, mi) => {
+    const rowData = rows[m.menu] || [];
+    return `<tr>
       <td class="td-left">${m.menu}</td>
       <td>${m.screens}</td>
       <td class="td-left">${m.authors.map(a=>`<span class="chip chip-plain">${a}</span>`).join('')}</td>
       <td class="td-left">${m.checkers.map(c=>`<span class="chip chip-checker">${c}</span>`).join('')}</td>
       <td>
         <div class="pd-wrap">
-          ${m.rows.map((r,ri) => editMode ? `
+          ${rowData.map((r,ri) => editMode ? `
             <div class="pd-row" style="gap:5px;flex-wrap:wrap">
-              <input class="edit-input" style="width:65px" value="${r.name}" onchange="menuData[${mi}].rows[${ri}].name=this.value">
-              <input class="edit-input" style="width:44px" type="number" min="0" max="100" value="${r.pct}" onchange="menuData[${mi}].rows[${ri}].pct=+this.value;renderCrosscheckTable()">%
-              <input class="edit-input" style="width:110px" value="${r.tag}" onchange="menuData[${mi}].rows[${ri}].tag=this.value">
-              <button class="btn-sm danger" style="font-size:10px;padding:1px 5px" onclick="menuData[${mi}].rows.splice(${ri},1);renderCrosscheckTable()">×</button>
+              <input class="edit-input" style="width:65px" value="${r.name}" onchange="assignByDate['${activeAssignDate}']['${m.menu}'][${ri}].name=this.value">
+              <input class="edit-input" style="width:44px" type="number" min="0" max="100" value="${r.pct}" onchange="assignByDate['${activeAssignDate}']['${m.menu}'][${ri}].pct=+this.value;renderCrosscheckTable()">%
+              <input class="edit-input" style="width:110px" value="${r.tag}" onchange="assignByDate['${activeAssignDate}']['${m.menu}'][${ri}].tag=this.value">
+              <button class="btn-sm danger" style="font-size:10px;padding:1px 5px" onclick="assignByDate['${activeAssignDate}']['${m.menu}'].splice(${ri},1);renderCrosscheckTable()">×</button>
             </div>
           ` : `
             <div class="pd-row">
@@ -606,11 +675,11 @@ function renderCrosscheckTable() {
               <span class="pd-tag ${r.tagCls}">${r.tag}</span>
             </div>
           `).join('')}
-          ${editMode ? `<button class="btn-sm" style="font-size:10px;margin-top:3px" onclick="menuData[${mi}].rows.push({name:'',pct:0,tag:'',tagCls:'tag-gray'});renderCrosscheckTable()">+ 행 추가</button>` : ''}
+          ${editMode ? `<button class="btn-sm" style="font-size:10px;margin-top:3px" onclick="if(!assignByDate['${activeAssignDate}']['${m.menu}'])assignByDate['${activeAssignDate}']['${m.menu}']=[];assignByDate['${activeAssignDate}']['${m.menu}'].push({name:'',pct:0,tag:'',tagCls:'tag-gray'});renderCrosscheckTable()">+ 행 추가</button>` : ''}
         </div>
       </td>
-    </tr>
-  `).join('');
+    </tr>`;
+  }).join('');
 }
 
 function renderCheckerSummary() {
@@ -774,6 +843,7 @@ function deleteReviewFile(id) {
 
 // ── 초기화 ──
 document.addEventListener('DOMContentLoaded', function() {
+  renderAssignTabs();
   renderCrosscheckTable();
   renderCheckerSummary();
   renderDailyLog();
