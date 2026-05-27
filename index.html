@@ -258,7 +258,7 @@ tbody tr:hover td { background: var(--color-surface-hover); }
     <button class="tab-btn" onclick="switchTab('crosscheck')">크로스체크 배분</button>
   </div>
 
-  <!-- ══ TAB 1: 전체 현황 ══ -->
+    <!-- ══ TAB 1: 전체 현황 ══ -->
   <div id="tab-overview" class="tab-pane active">
 
     <div class="kpi-grid">
@@ -268,12 +268,11 @@ tbody tr:hover td { background: var(--color-surface-hover); }
       <div class="kpi purple"><div class="kpi-label">참여 담당자</div><div class="kpi-num">12</div><div class="kpi-desc">명</div></div>
     </div>
 
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-header"><span class="dot" style="background:#3b82f6"></span>화면별 진행 현황</div>
-        <table>
-          <thead><tr><th>NO</th><th class="td-left">메뉴</th><th>전체</th><th>완료</th><th style="min-width:100px">진행률</th><th>상태</th></tr></thead>
-          <tbody>
+    <div class="card" style="margin-bottom:var(--space-5)">
+      <div class="card-header"><span class="dot" style="background:#3b82f6"></span>화면별 진행 현황</div>
+      <table>
+        <thead><tr><th>NO</th><th class="td-left">메뉴</th><th>전체</th><th>완료</th><th style="min-width:100px">진행률</th><th>상태</th></tr></thead>
+        <tbody>
             <tr><td>1</td><td class="td-left">공통/홈</td><td>3</td><td>3</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td></tr>
             <tr><td>2</td><td class="td-left">주식</td><td>226</td><td>226</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td></tr>
             <tr><td>3</td><td class="td-left">해외주식</td><td>116</td><td>116</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td></tr>
@@ -290,58 +289,47 @@ tbody tr:hover td { background: var(--color-surface-hover); }
             <tr><td>14</td><td class="td-left">온라인지점</td><td>71</td><td>71</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td></tr>
             <tr><td>15</td><td class="td-left">설정/도우미</td><td>2</td><td>2</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td></tr>
             <tr class="row-total"><td colspan="2">합계</td><td>1,041</td><td>1,041</td><td></td><td>100%</td></tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><span class="dot" style="background:#22c55e"></span>담당자별 진행 현황</div>
-        <table>
-                    <thead><tr><th class="td-left">담당자</th><th class="td-left">담당 메뉴</th><th>화면수</th><th style="min-width:120px">부하량</th><th>크로스체크 상태</th><th class="td-left" style="min-width:210px">진행 상세</th></tr></thead>
-          <tbody>
-            <tr><td class="td-left td-bold">박혜상</td><td class="td-left" style="color:#909090;font-size:11px">투자정보, 뱅킹/공모주/대출</td><td>84</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:37%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">투자정보</span><div class="pd-bar"><div class="pd-bar-fill" style="width:50%;background:#3b82f6"></div></div><span class="pd-pct">50%</span><span class="pd-tag tag-today">오늘 완료예정</span></div><div class="pd-row"><span class="pd-menu">뱅킹/공모주</span><div class="pd-bar"><div class="pd-bar-fill" style="width:80%;background:#3b82f6"></div></div><span class="pd-pct">80%</span><span class="pd-tag tag-today">오늘 완료</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">박선복</td><td class="td-left" style="color:#909090;font-size:11px">잔고평가, 신용/대자</td><td>95</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:42%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">신용/대자</span><div class="pd-bar"><div class="pd-bar-fill" style="width:100%;background:#22c55e"></div></div><span class="pd-pct">100%</span><span class="pd-tag tag-done">완료 ✓</span></div><div class="pd-row"><span class="pd-menu">잔고평가</span><div class="pd-bar"><div class="pd-bar-fill" style="width:20%;background:#3b82f6"></div></div><span class="pd-pct">20%</span><span class="pd-tag tag-warn">오늘 완료 미정</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">오문숙</td><td class="td-left" style="color:#909090;font-size:11px">해외주식</td><td>116</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:51%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">해외주식</span><div class="pd-bar"><div class="pd-bar-fill" style="width:70%;background:#3b82f6"></div></div><span class="pd-pct">70%</span><span class="pd-tag tag-time">오후 3시까지 마무리</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">유진홍</td><td class="td-left" style="color:#909090;font-size:11px">주식</td><td>226</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-orange" style="width:100%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">주식(담당분)</span><div class="pd-bar"><div class="pd-bar-fill" style="width:50%;background:#3b82f6"></div></div><span class="pd-pct">50%</span><span class="pd-tag tag-today">진행중</span></div><div class="pd-row"><span class="pd-menu">주식(허세빈)</span><div class="pd-bar"><div class="pd-bar-fill" style="width:0%;background:#ef4444"></div></div><span class="pd-pct">0%</span><span class="pd-tag tag-warn">미진행</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">김은경</td><td class="td-left" style="color:#909090;font-size:11px">온라인지점, 공통/홈</td><td>74</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">전체</span><div class="pd-bar"><div class="pd-bar-fill" style="width:100%;background:#22c55e"></div></div><span class="pd-pct">100%</span><span class="pd-tag tag-done">완료 ✓</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">장소윤</td><td class="td-left" style="color:#909090;font-size:11px">종합/미니</td><td>55</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:24%"></div></div></td><td><span class="badge badge-red">미시작</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">종합/미니</span><span class="pd-tag tag-gray">미시작</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">황준혁</td><td class="td-left" style="color:#909090;font-size:11px">금융상품</td><td>102</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:45%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">금융상품</span><span class="pd-tag tag-time">오후 4시 마무리</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">김관영</td><td class="td-left" style="color:#909090;font-size:11px">ETF/ETN/ELW</td><td>51</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:23%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">ETF/ETN/ELW</span><span class="pd-tag tag-time">오전 내 완료예정</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">전혜연</td><td class="td-left" style="color:#909090;font-size:11px">차트, 설정/도우미</td><td>59</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">차트</span><div class="pd-bar"><div class="pd-bar-fill" style="width:100%;background:#22c55e"></div></div><span class="pd-pct">100%</span><span class="pd-tag tag-done">검토완료 ✓</span></div><div class="pd-row"><span class="pd-menu">설정/도우미</span><div class="pd-bar"><div class="pd-bar-fill" style="width:100%;background:#22c55e"></div></div><span class="pd-pct">100%</span><span class="pd-tag tag-done">오전 검토완료 ✓</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">오현주</td><td class="td-left" style="color:#909090;font-size:11px">주문체결</td><td>75</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:33%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td><td style="font-size:12px;color:#ccc;text-align:center">—</td></tr>
-            <tr><td class="td-left td-bold">허세빈</td><td class="td-left" style="color:#909090;font-size:11px">주식 (유진홍 배분분)</td><td>—</td><td></td><td><span class="badge badge-yellow">진행중</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">주식(3개)</span><span class="pd-tag tag-warn">내일 오전 마무리</span></div></div></td></tr>
-            <tr><td class="td-left td-bold">이서후</td><td class="td-left" style="color:#909090;font-size:11px">선물옵션</td><td>104</td><td><div class="bar" style="height:14px"><div class="bar-fill bar-blue" style="width:46%"></div></div></td><td><span class="badge badge-yellow">진행중</span></td><td><div class="pd-wrap"><div class="pd-row"><span class="pd-menu">선물옵션</span><span class="pd-tag tag-time">오늘 마무리 예정</span></div></div></td></tr>
-            <tr class="row-total"><td>합계</td><td></td><td>1,041</td><td>평균 87화면/인</td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><span class="dot" style="background:#f97316"></span>메뉴별 TC 작성 담당자 현황</div>
-      <table>
-        <thead><tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">작성 담당자</th><th>진행률</th><th>상태</th></tr></thead>
-        <tbody>
-          <tr><td class="td-left">공통/홈</td><td>3</td><td class="td-left"><span class="chip chip-author">유진홍</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">주식</td><td>226</td><td class="td-left"><span class="chip chip-author">박선복</span><span class="chip chip-author">장소윤</span><span class="chip chip-author">이서후</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">해외주식</td><td>116</td><td class="td-left"><span class="chip chip-author">박혜상</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">선물옵션</td><td>104</td><td class="td-left"><span class="chip chip-author">박선복</span><span class="chip chip-author">황준혁</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">ETF/ETN/ELW</td><td>51</td><td class="td-left"><span class="chip chip-author">장소윤</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">주문체결</td><td>75</td><td class="td-left"><span class="chip chip-author">오문숙</span><span class="chip chip-author">김관영</span><span class="chip chip-author">허세빈</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">잔고평가</td><td>74</td><td class="td-left"><span class="chip chip-author">유진홍</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">투자정보</td><td>67</td><td class="td-left"><span class="chip chip-author">허세빈</span><span class="chip chip-author">김은경</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">차트</td><td>57</td><td class="td-left"><span class="chip chip-author">오현주</span><span class="chip chip-author">황준혁</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">종합/미니</td><td>55</td><td class="td-left"><span class="chip chip-author">전혜연</span><span class="chip chip-author">김은경</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">뱅킹/공모주/대출</td><td>17</td><td class="td-left"><span class="chip chip-author">유진홍</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">신용/대자</td><td>21</td><td class="td-left"><span class="chip chip-author">김은경</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">금융상품</td><td>102</td><td class="td-left"><span class="chip chip-author">오문숙</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">온라인지점</td><td>71</td><td class="td-left"><span class="chip chip-author">김관영</span></td><td>100%</td><td><span class="badge badge-green">완료</span></td></tr>
-          <tr><td class="td-left">설정/도우미</td><td>2</td><td class="td-left"><span class="chip chip-author">황준혁</span></td><td>50%</td><td><span class="badge badge-orange">진행중</span></td></tr>
         </tbody>
       </table>
     </div>
+
+    <div class="card" style="margin-bottom:var(--space-5)">
+      <div class="card-header"><span class="dot" style="background:#22c55e"></span>담당자별 진행 현황</div>
+      <table>
+        <thead>
+          <tr>
+            <th class="td-left">담당자</th>
+            <th class="td-left">TC 작성 메뉴</th>
+            <th>TC 화면수</th>
+            <th>완료</th>
+            <th style="min-width:100px">진행률</th>
+            <th>TC 상태</th>
+            <th class="td-left">크로스체크 담당</th>
+            <th>크로스체크 상태</th>
+          </tr>
+        </thead>
+        <tbody>
+
+            <tr><td class="td-left td-bold">박혜상</td><td class="td-left"><span class="chip chip-author">해외주식</span></td><td>116</td><td>116</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">투자정보</span><span class="chip chip-checker">뱅킹/공모주/대출</span></td><td><span class="badge badge-yellow">진행중</span></td></tr>
+            <tr><td class="td-left td-bold">박선복</td><td class="td-left"><span class="chip chip-author">주식</span><span class="chip chip-author">선물옵션</span></td><td>129</td><td>129</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">잔고평가</span><span class="chip chip-checker">신용/대자</span></td><td><span class="badge badge-yellow">진행중</span></td></tr>
+            <tr><td class="td-left td-bold">오문숙</td><td class="td-left"><span class="chip chip-author">주문체결</span><span class="chip chip-author">금융상품</span></td><td>149</td><td>149</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">해외주식</span></td><td><span class="badge badge-yellow">진행중</span></td></tr>
+            <tr><td class="td-left td-bold">유진홍</td><td class="td-left"><span class="chip chip-author">공통/홈</span><span class="chip chip-author">잔고평가</span><span class="chip chip-author">뱅킹/공모주/대출</span></td><td>94</td><td>94</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">주식</span></td><td><span class="badge badge-yellow">진행중</span></td></tr>
+            <tr><td class="td-left td-bold">김은경</td><td class="td-left"><span class="chip chip-author">투자정보</span><span class="chip chip-author">종합/미니</span><span class="chip chip-author">신용/대자</span></td><td>71</td><td>71</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">온라인지점</span><span class="chip chip-checker">공통/홈</span></td><td><span class="badge badge-green">완료</span></td></tr>
+            <tr><td class="td-left td-bold">장소윤</td><td class="td-left"><span class="chip chip-author">주식</span><span class="chip chip-author">ETF/ETN/ELW</span><span class="chip chip-author">종합/미니</span></td><td>125</td><td>125</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">종합/미니</span></td><td><span class="badge badge-red">미시작</span></td></tr>
+            <tr><td class="td-left td-bold">황준혁</td><td class="td-left"><span class="chip chip-author">선물옵션</span><span class="chip chip-author">차트</span><span class="chip chip-author">설정/도우미</span></td><td>84</td><td>83</td><td><div class="bar"><div class="bar-fill bar-orange" style="width:98%"></div></div></td><td><span class="badge badge-orange">98%</span></td><td class="td-left"><span class="chip chip-checker">금융상품</span></td><td><span class="badge badge-yellow">진행중</span></td></tr>
+            <tr><td class="td-left td-bold">김관영</td><td class="td-left"><span class="chip chip-author">주문체결</span><span class="chip chip-author">온라인지점</span></td><td>84</td><td>84</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">ETF/ETN/ELW</span></td><td><span class="badge badge-yellow">진행중</span></td></tr>
+            <tr><td class="td-left td-bold">전혜연</td><td class="td-left"><span class="chip chip-author">종합/미니</span><span class="chip chip-author">차트</span></td><td>38</td><td>38</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">차트</span><span class="chip chip-checker">설정/도우미</span></td><td><span class="badge badge-green">완료</span></td></tr>
+            <tr><td class="td-left td-bold">오현주</td><td class="td-left"><span class="chip chip-author">차트</span></td><td>26</td><td>26</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">주문체결</span></td><td><span class="badge badge-yellow">진행중</span></td></tr>
+            <tr><td class="td-left td-bold">허세빈</td><td class="td-left"><span class="chip chip-author">주문체결</span><span class="chip chip-author">투자정보</span></td><td>49</td><td>49</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">주식(배분)</span></td><td><span class="badge badge-yellow">진행중</span></td></tr>
+            <tr><td class="td-left td-bold">이서후</td><td class="td-left"><span class="chip chip-author">주식</span></td><td>76</td><td>76</td><td><div class="bar"><div class="bar-fill bar-green" style="width:100%"></div></div></td><td><span class="badge badge-green">완료</span></td><td class="td-left"><span class="chip chip-checker">선물옵션</span></td><td><span class="badge badge-red">미시작</span></td></tr>
+          <tr class="row-total"><td>합계</td><td></td><td>1,041</td><td>1,040</td><td></td><td>100%</td><td></td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 
+  
   <!-- ══ TAB 2: 날짜별 현황 ══ -->
   <div id="tab-bydate" class="tab-pane">
 
