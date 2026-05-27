@@ -560,8 +560,8 @@ const menuBase = [
   {menu:'설정/도우미',screens:2,authors:['황준혁'],checkers:['전혜연']},
 ];
 
-// 날짜별 진행 현황 기본값 (localStorage 없을 때)
-const defaultRows = {
+// 05/27 기본 진행 현황
+const defaultRows27 = {
   '주식':[{name:'유진홍',pct:50,tag:'50% 진행중',tagCls:'tag-today'},{name:'허세빈',pct:0,tag:'미진행',tagCls:'tag-warn'}],
   '해외주식':[{name:'오문숙',pct:70,tag:'70% · 오후3시',tagCls:'tag-time'}],
   '선물옵션':[{name:'이서후',pct:0,tag:'오늘 마무리',tagCls:'tag-time'}],
@@ -579,25 +579,64 @@ const defaultRows = {
   '설정/도우미':[{name:'전혜연',pct:100,tag:'오전 검토완료 ✓',tagCls:'tag-done'}],
 };
 
-// 날짜별 배분 현황 저장소: { "2026-05-27": { "주식": [{...}], ... } }
+// 05/28 진행 현황 (검토 완료 13개 메뉴 반영)
+const done28 = [{pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}];
+const defaultRows28 = {
+  '주식':[{name:'유진홍',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'},{name:'허세빈',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '해외주식':[{name:'오문숙',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '선물옵션':[{name:'이서후',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '금융상품':[{name:'황준혁',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '주문체결':[{name:'오현주',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '잔고평가':[{name:'박선복',pct:20,tag:'20% · 진행중',tagCls:'tag-warn'}],
+  '온라인지점':[{name:'김은경',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '투자정보':[{name:'박혜상',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '차트':[{name:'전혜연',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '종합/미니':[{name:'장소윤',pct:0,tag:'미시작',tagCls:'tag-gray'}],
+  'ETF/ETN/ELW':[{name:'김관영',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '신용/대자':[{name:'박선복',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '뱅킹/공모주/대출':[{name:'박혜상',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '공통/홈':[{name:'김은경',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+  '설정/도우미':[{name:'전혜연',pct:100,tag:'검토완료 ✓',tagCls:'tag-done'}],
+};
+
+// 05/28 검토확인 초기값 (완료 13개 메뉴)
+const defaultConfirm28 = {
+  '주식':true,'해외주식':true,'선물옵션':true,'금융상품':true,'주문체결':true,
+  '온라인지점':true,'투자정보':true,'차트':true,'ETF/ETN/ELW':true,
+  '신용/대자':true,'뱅킹/공모주/대출':true,'공통/홈':true,'설정/도우미':true,
+};
+
+// 날짜별 배분 현황 저장소
 let assignByDate = JSON.parse(localStorage.getItem('cx_assign') || 'null');
 if (!assignByDate) {
   assignByDate = {
-    '2026-05-27': JSON.parse(JSON.stringify(defaultRows)),
-    '2026-05-28': JSON.parse(JSON.stringify(defaultRows)),
+    '2026-05-27': JSON.parse(JSON.stringify(defaultRows27)),
+    '2026-05-28': JSON.parse(JSON.stringify(defaultRows28)),
   };
   localStorage.setItem('cx_assign', JSON.stringify(assignByDate));
 }
-// 기존 데이터에 05/28 없으면 추가
 if (!assignByDate['2026-05-28']) {
-  const prev = assignByDate[Object.keys(assignByDate).sort().reverse()[0]];
-  assignByDate['2026-05-28'] = JSON.parse(JSON.stringify(prev));
+  assignByDate['2026-05-28'] = JSON.parse(JSON.stringify(defaultRows28));
+  localStorage.setItem('cx_assign', JSON.stringify(assignByDate));
+}
+// 05/28 데이터가 구버전(05/27 복사본)이면 최신으로 교체
+if (assignByDate['2026-05-28'] && assignByDate['2026-05-28']['주식'] &&
+    assignByDate['2026-05-28']['주식'][0] && assignByDate['2026-05-28']['주식'][0].pct < 100) {
+  assignByDate['2026-05-28'] = JSON.parse(JSON.stringify(defaultRows28));
   localStorage.setItem('cx_assign', JSON.stringify(assignByDate));
 }
 let activeAssignDate = '2026-05-28';
 
-// 검토확인 저장소: { "2026-05-28": { "주식": true, ... } }
-let confirmByDate = JSON.parse(localStorage.getItem('cx_confirm') || '{}');
+// 검토확인 저장소
+let confirmByDate = JSON.parse(localStorage.getItem('cx_confirm') || 'null');
+if (!confirmByDate) {
+  confirmByDate = { '2026-05-28': JSON.parse(JSON.stringify(defaultConfirm28)) };
+  localStorage.setItem('cx_confirm', JSON.stringify(confirmByDate));
+}
+if (!confirmByDate['2026-05-28']) {
+  confirmByDate['2026-05-28'] = JSON.parse(JSON.stringify(defaultConfirm28));
+  localStorage.setItem('cx_confirm', JSON.stringify(confirmByDate));
+}
 function saveConfirm() { localStorage.setItem('cx_confirm', JSON.stringify(confirmByDate)); }
 
 function toggleConfirm(date, menu) {
