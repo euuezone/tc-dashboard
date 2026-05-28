@@ -609,7 +609,7 @@ const defaultRows29 = {
   '잔고평가':[{name:'유진홍',pct:80,tag:'오전 안에 완료',tagCls:'tag-time'}],
   '온라인지점':[{name:'김관영',pct:100,tag:'수정완료 ✓',tagCls:'tag-done'}],
   '투자정보':[{name:'김은경',pct:80,tag:'오전 안에 완료',tagCls:'tag-time'}],
-  '차트':[{name:'황준혁',pct:80,tag:'오전 안에 완료',tagCls:'tag-time'},{name:'오현주',pct:0,tag:'수정 미완료',tagCls:'tag-warn'}],
+  '차트':[{name:'황준혁',pct:80,tag:'오전 안에 완료',tagCls:'tag-time'},{name:'오현주',pct:30,tag:'수정 진행중',tagCls:'tag-today'}],
   '종합/미니':[{name:'전혜연',pct:100,tag:'수정완료 ✓',tagCls:'tag-done'}],
   'ETF/ETN/ELW':[{name:'장소윤',pct:80,tag:'오전 안에 완료',tagCls:'tag-time'}],
   '신용/대자':[{name:'김은경',pct:100,tag:'수정완료 ✓',tagCls:'tag-done'}],
@@ -622,7 +622,7 @@ const defaultRows29 = {
 const defaultConfirm28 = {};
 
 // 데이터 버전 — 담당자 변경 시 이 값을 올리면 localStorage 강제 갱신
-const DATA_VERSION = 'v20260529-7';
+const DATA_VERSION = 'v20260529-8';
 
 // 버전 불일치 시 초기화
 if (localStorage.getItem('cx_version') !== DATA_VERSION) {
