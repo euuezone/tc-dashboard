@@ -421,7 +421,7 @@ tbody tr:hover td { background: var(--color-surface-hover); }
       <!-- 테이블 -->
       <div style="overflow-x:auto">
         <table style="min-width:900px">
-          <thead><tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left">크로스체크</th><th class="td-left" style="min-width:200px">검토진행현황</th><th style="min-width:120px">검토확인</th><th style="min-width:110px">수정 상태</th></tr></thead>
+          <thead><tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left">크로스체크</th><th class="td-left" style="min-width:200px">검토진행현황</th><th style="min-width:120px">검토확인</th><th style="min-width:110px">수정 상태</th><th class="td-left" style="min-width:180px">비고</th></tr></thead>
           <tbody id="cx-assign-body"></tbody>
         </table>
       </div>
@@ -692,6 +692,23 @@ async function saveConfirmToGitHub() {
 let confirmByDate = JSON.parse(localStorage.getItem('cx_confirm') || '{}');
 function saveConfirm() { localStorage.setItem('cx_confirm', JSON.stringify(confirmByDate)); }
 
+// 비고 저장소
+let notesByDate = JSON.parse(localStorage.getItem('cx_notes') || 'null');
+if (!notesByDate) {
+  notesByDate = {
+    '2026-05-27': {},
+    '2026-05-28': {},
+    '2026-05-29': {'주문체결': '테스트불가케이스 시간외거래 내용작성 있음 (야간선물옵션 스피드 주문)'},
+  };
+  localStorage.setItem('cx_notes', JSON.stringify(notesByDate));
+}
+if (!notesByDate['2026-05-29']) notesByDate['2026-05-29'] = {};
+if (!notesByDate['2026-05-29']['주문체결']) {
+  notesByDate['2026-05-29']['주문체결'] = '테스트불가케이스 시간외거래 내용작성 있음 (야간선물옵션 스피드 주문)';
+  localStorage.setItem('cx_notes', JSON.stringify(notesByDate));
+}
+function saveNotes() { localStorage.setItem('cx_notes', JSON.stringify(notesByDate)); }
+
 async function toggleConfirm(date, menu) {
   if (!confirmByDate[date]) confirmByDate[date] = {};
   confirmByDate[date][menu] = !confirmByDate[date][menu];
@@ -766,10 +783,12 @@ function renderAssignTabs() {
 function renderCrosscheckTable() {
   const rows = assignByDate[activeAssignDate] || {};
   const confirms = confirmByDate[activeAssignDate] || {};
+  const notes = notesByDate[activeAssignDate] || {};
   document.getElementById('cx-assign-body').innerHTML = menuBase.map((m, mi) => {
     const rowData = rows[m.menu] || [];
     const confirmed = !!confirms[m.menu];
     const menuKey = m.menu.replace(/'/g, "\\'");
+    const note = notes[m.menu] || '';
     return `<tr${confirmed ? ' style="background:#f0fdf4"' : ''}>
       <td class="td-left" style="font-weight:600">${m.menu}</td>
       <td>${m.screens}</td>
@@ -807,6 +826,12 @@ function renderCrosscheckTable() {
         ${confirmed
           ? '<span style="display:inline-block;padding:3px 8px;font-size:11px;font-weight:700;background:#dbeafe;color:#1d4ed8;border:1px solid #93c5fd">수정진행가능</span>'
           : '<span style="display:inline-block;padding:3px 8px;font-size:11px;color:#909090;background:#f3f4f6;border:1px solid #e5e7eb">대기중</span>'
+        }
+      </td>
+      <td class="td-left">
+        ${editMode
+          ? `<input class="edit-input" style="width:100%;min-width:160px;font-size:11px" value="${note.replace(/"/g,'&quot;')}" placeholder="비고 입력" onchange="if(!notesByDate['${activeAssignDate}'])notesByDate['${activeAssignDate}']={};notesByDate['${activeAssignDate}']['${menuKey}']=this.value;saveNotes()">`
+          : note ? `<span style="font-size:11px;color:#374151;line-height:1.4">${note}</span>` : ''
         }
       </td>
     </tr>`;
