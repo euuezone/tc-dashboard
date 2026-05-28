@@ -421,7 +421,7 @@ tbody tr:hover td { background: var(--color-surface-hover); }
       <!-- 테이블 -->
       <div style="overflow-x:auto">
         <table style="min-width:900px">
-          <thead><tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left">크로스체크</th><th class="td-left" style="min-width:200px">검토진행현황</th><th style="min-width:120px">검토확인</th><th style="min-width:110px">수정 상태</th><th class="td-left" style="min-width:180px">비고</th></tr></thead>
+          <thead id="cx-assign-head"></thead>
           <tbody id="cx-assign-body"></tbody>
         </table>
       </div>
@@ -622,7 +622,7 @@ const defaultRows29 = {
 const defaultConfirm28 = {};
 
 // 데이터 버전 — 담당자 변경 시 이 값을 올리면 localStorage 강제 갱신
-const DATA_VERSION = 'v20260529-1';
+const DATA_VERSION = 'v20260529-2';
 
 // 버전 불일치 시 초기화
 if (localStorage.getItem('cx_version') !== DATA_VERSION) {
@@ -781,20 +781,23 @@ function renderAssignTabs() {
 }
 
 function renderCrosscheckTable() {
+  const is529 = activeAssignDate === '2026-05-29';
   const rows = assignByDate[activeAssignDate] || {};
   const confirms = confirmByDate[activeAssignDate] || {};
   const notes = notesByDate[activeAssignDate] || {};
-  document.getElementById('cx-assign-body').innerHTML = menuBase.map((m, mi) => {
+
+  // 헤더
+  const headHtml = is529
+    ? `<tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left" style="min-width:200px">수정 진행상황</th><th class="td-left" style="min-width:180px">비고</th></tr>`
+    : `<tr><th class="td-left">메뉴</th><th>화면수</th><th class="td-left">TC 작성자</th><th class="td-left">크로스체크</th><th class="td-left" style="min-width:200px">검토진행현황</th><th style="min-width:120px">검토확인</th><th style="min-width:110px">수정 상태</th><th class="td-left" style="min-width:180px">비고</th></tr>`;
+  document.getElementById('cx-assign-head').innerHTML = headHtml;
+
+  document.getElementById('cx-assign-body').innerHTML = menuBase.map((m) => {
     const rowData = rows[m.menu] || [];
     const confirmed = !!confirms[m.menu];
     const menuKey = m.menu.replace(/'/g, "\\'");
     const note = notes[m.menu] || '';
-    return `<tr${confirmed ? ' style="background:#f0fdf4"' : ''}>
-      <td class="td-left" style="font-weight:600">${m.menu}</td>
-      <td>${m.screens}</td>
-      <td class="td-left">${m.authors.map(a=>`<span class="chip chip-plain">${a}</span>`).join('')}</td>
-      <td class="td-left">${m.checkers.map(c=>`<span class="chip chip-checker">${c}</span>`).join('')}</td>
-      <td>
+    const progressCell = `<td>
         <div class="pd-wrap">
           ${rowData.map((r,ri) => editMode ? `
             <div class="pd-row" style="gap:5px;flex-wrap:wrap">
@@ -812,7 +815,29 @@ function renderCrosscheckTable() {
           `).join('')}
           ${editMode ? `<button class="btn-sm" style="font-size:10px;margin-top:3px" onclick="if(!assignByDate['${activeAssignDate}']['${menuKey}'])assignByDate['${activeAssignDate}']['${menuKey}']=[];assignByDate['${activeAssignDate}']['${menuKey}'].push({name:'',pct:0,tag:'',tagCls:'tag-gray'});renderCrosscheckTable()">+ 행 추가</button>` : ''}
         </div>
-      </td>
+      </td>`;
+    const noteCell = `<td class="td-left">
+        ${editMode
+          ? `<input class="edit-input" style="width:100%;min-width:160px;font-size:11px" value="${note.replace(/"/g,'&quot;')}" placeholder="비고 입력" onchange="if(!notesByDate['${activeAssignDate}'])notesByDate['${activeAssignDate}']={};notesByDate['${activeAssignDate}']['${menuKey}']=this.value;saveNotes()">`
+          : note ? `<span style="font-size:11px;color:#374151;line-height:1.4">${note}</span>` : ''
+        }
+      </td>`;
+
+    if (is529) {
+      return `<tr>
+        <td class="td-left" style="font-weight:600">${m.menu}</td>
+        <td>${m.screens}</td>
+        <td class="td-left">${m.authors.map(a=>`<span class="chip chip-plain">${a}</span>`).join('')}</td>
+        ${progressCell}
+        ${noteCell}
+      </tr>`;
+    }
+    return `<tr${confirmed ? ' style="background:#f0fdf4"' : ''}>
+      <td class="td-left" style="font-weight:600">${m.menu}</td>
+      <td>${m.screens}</td>
+      <td class="td-left">${m.authors.map(a=>`<span class="chip chip-plain">${a}</span>`).join('')}</td>
+      <td class="td-left">${m.checkers.map(c=>`<span class="chip chip-checker">${c}</span>`).join('')}</td>
+      ${progressCell}
       <td style="text-align:center">
         <button onclick="toggleConfirm('${activeAssignDate}','${menuKey}')"
           style="padding:4px 10px;font-size:11px;font-weight:700;border:1px solid;cursor:pointer;font-family:inherit;
@@ -828,12 +853,7 @@ function renderCrosscheckTable() {
           : '<span style="display:inline-block;padding:3px 8px;font-size:11px;color:#909090;background:#f3f4f6;border:1px solid #e5e7eb">대기중</span>'
         }
       </td>
-      <td class="td-left">
-        ${editMode
-          ? `<input class="edit-input" style="width:100%;min-width:160px;font-size:11px" value="${note.replace(/"/g,'&quot;')}" placeholder="비고 입력" onchange="if(!notesByDate['${activeAssignDate}'])notesByDate['${activeAssignDate}']={};notesByDate['${activeAssignDate}']['${menuKey}']=this.value;saveNotes()">`
-          : note ? `<span style="font-size:11px;color:#374151;line-height:1.4">${note}</span>` : ''
-        }
-      </td>
+      ${noteCell}
     </tr>`;
   }).join('');
 }
