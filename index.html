@@ -602,27 +602,27 @@ const defaultRows28 = {
 // 05/29 수정 작업 진행상황 (초기값 없음 — 사용자가 직접 입력)
 const defaultRows29 = {
   '주식':[],
-  '해외주식':[],
+  '해외주식':[{name:'박혜상',pct:80,tag:'오전 안에 완료',tagCls:'tag-time'}],
   '선물옵션':[],
-  '금융상품':[],
+  '금융상품':[{name:'오문숙',pct:80,tag:'오전 안에 완료',tagCls:'tag-time'}],
   '주문체결':[],
-  '잔고평가':[],
+  '잔고평가':[{name:'유진홍',pct:80,tag:'오늘 안에 완료',tagCls:'tag-today'}],
   '온라인지점':[{name:'김관영',pct:100,tag:'수정완료 ✓',tagCls:'tag-done'}],
-  '투자정보':[],
+  '투자정보':[{name:'김은경',pct:80,tag:'오전 안에 완료',tagCls:'tag-time'}],
   '차트':[],
-  '종합/미니':[],
+  '종합/미니':[{name:'전혜연',pct:100,tag:'수정완료 ✓',tagCls:'tag-done'}],
   'ETF/ETN/ELW':[],
   '신용/대자':[{name:'김은경',pct:100,tag:'수정완료 ✓',tagCls:'tag-done'}],
   '뱅킹/공모주/대출':[],
   '공통/홈':[],
-  '설정/도우미':[],
+  '설정/도우미':[{name:'황준혁',pct:100,tag:'수정완료 ✓',tagCls:'tag-done'}],
 };
 
 // 검토확인은 사용자가 직접 클릭 — 초기값 없음
 const defaultConfirm28 = {};
 
 // 데이터 버전 — 담당자 변경 시 이 값을 올리면 localStorage 강제 갱신
-const DATA_VERSION = 'v20260529-2';
+const DATA_VERSION = 'v20260529-3';
 
 // 버전 불일치 시 초기화
 if (localStorage.getItem('cx_version') !== DATA_VERSION) {
